@@ -7,12 +7,17 @@ from django.db import models
 
 def get_image_path(instance, filename):
     return "face_images/%s%s" % (
-        hashlib.sha1((instance.name + filename).encode("utf-8")).hexdigest(),
+        hashlib.sha1(
+            (str(instance.created_at) + filename).encode("utf-8")).hexdigest(),
         os.path.splitext(filename)[1],
     )
 
 
 class UploadedImage(models.Model):
+    user_im = models.ImageField(
+        upload_to=get_image_path, null=True, blank=True)
+    product_im = models.ImageField(
+        upload_to=get_image_path, null=True, blank=True)
     image = models.ImageField(upload_to=get_image_path, null=True, blank=True)
     author = models.ForeignKey(
         User,
