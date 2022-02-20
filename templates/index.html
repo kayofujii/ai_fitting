@@ -2,36 +2,46 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-    {% comment %} <br/>
-    <div class="jumbotron">
-        <h1 class="display-4">Newspaper app</h1>
-        <p class="lead">A Newspaper website built with Django.</p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href=""
-            role="button">View All Articles</a>
-        </p>
-    </div> {% endcomment %}
-{% if user.is_authenticated %}
-    ようこそ{{ user.username }}さん。
-    <p><a href="{% url 'logout' %}">ログアウト</a></p>
-    <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div><label>{{ form.user_im.label }}</label>: {{ form.user_im }}</div>
-        <div><label>{{ form.product_im.label }}</label>: {{ form.product_im }}</div>
-        <button type="submit">合成</button>
-    </form>
-    <div class="row my-4">
-        <div class="col-md-8">
-            {% for im in uploaded_images %}
-                <div class="card mb-4 index">
-                    <img class="card-img-top index-img" src="{{ im.image.url }}" width="10%" height="10%"/>
-                </div>
-            {% endfor %}
+        <div class='row mt-5'>
+            <div class="col-md-6">
+                <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">アップロード</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="user_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                            <label class="custom-file-label" for="inputGroupFile01">ユーザー画像を選択する</label>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">アップロード</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="product_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                            <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg" type="submit">試着する</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-{% else %}
-    <p><a href="{% url 'login' %}">ログイン</a></p>
-    <p><a href="{% url 'signup' %}">新規登録</a></p>
-{% endif %}
-
+        <div class="row my-4">
+            <div class="col-md-6">
+                {% for im in uploaded_images %}
+                    <div class="card mb-4 index">
+                        <img class="img-thumbnail" src="{{ im.image.url }}" />
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script>
+        bsCustomFileInput.init();
+    </script>
 {% endblock content %}

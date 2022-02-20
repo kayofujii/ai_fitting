@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'index' %}">AIfitting</a>
+        <a class="navbar-brand" href="{% url 'home' %}">AeyeFitting</a>
         {% comment %} {% if user.is_authenticated %}
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -34,10 +34,10 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg-right"
                         aria-labelledby="navbarDropdown">
-                            {% comment %} <a class="dropdown-item"
-                            href="{% url 'password_change'%}">Change password
+                            <a class="dropdown-item"
+                            href="{% url 'index'%}">AI試着
                             </a>
-                            <div class="dropdown-divider"></div> {% endcomment %}
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">
                             ログアウト
                             </a>

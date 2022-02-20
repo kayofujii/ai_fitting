@@ -4,6 +4,7 @@ import os.path
 import cv2
 import numpy as np
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -11,16 +12,23 @@ from .forms import ImageForm
 from .models import UploadedImage
 
 
+def home(request):
+    params = {}
+
+    return render(request, "home.html", params)
+
+
+@login_required
 def index(request):
     params = {}
-    if request.user:
-        params["form"] = ImageForm()
-        params["uploaded_images"] = UploadedImage.objects.filter(author=request.user).order_by(
-            '-created_at')
+    params["form"] = ImageForm()
+    params["uploaded_images"] = UploadedImage.objects.filter(author=request.user).order_by(
+        '-created_at')
 
     return render(request, "index.html", params)
 
 
+@login_required
 def upload_image(request):
     if request.method == "POST":
         form = ImageForm(request.POST, request.FILES)
