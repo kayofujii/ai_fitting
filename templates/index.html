@@ -2,7 +2,7 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-    <br/>
+    {% comment %} <br/>
     <div class="jumbotron">
         <h1 class="display-4">Newspaper app</h1>
         <p class="lead">A Newspaper website built with Django.</p>
@@ -10,12 +10,28 @@
             <a class="btn btn-primary btn-lg" href=""
             role="button">View All Articles</a>
         </p>
-    </div>
+    </div> {% endcomment %}
 {% if user.is_authenticated %}
-    Hi {{ user.username }}!
-    <p><a href="{% url 'logout' %}">Log Out</a></p>
+    ようこそ{{ user.username }}さん。
+    <p><a href="{% url 'logout' %}">ログアウト</a></p>
+    <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div><label>{{ form.user_im.label }}</label>: {{ form.user_im }}</div>
+        <div><label>{{ form.product_im.label }}</label>: {{ form.product_im }}</div>
+        <button type="submit">合成</button>
+    </form>
+    <div class="row my-4">
+        <div class="col-md-8">
+            {% for im in uploaded_images %}
+                <div class="card mb-4 index">
+                    <img class="card-img-top index-img" src="{{ im.image.url }}" width="10%" height="10%"/>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% else %}
-    <p><a href="{% url 'login' %}">Log In</a></p>
-    <p><a href="{% url 'signup' %}">Sign Up</a></p>
+    <p><a href="{% url 'login' %}">ログイン</a></p>
+    <p><a href="{% url 'signup' %}">新規登録</a></p>
 {% endif %}
+
 {% endblock content %}
