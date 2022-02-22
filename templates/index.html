@@ -2,6 +2,15 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
+        <br/>
+        <div class="jumbotron">
+            <h1 class="display-4">AeyeFitting</h1>
+            <p class="lead">買おうか迷っている服と、自分の写真を用意するだけ。お店に行かず、似合うかわかるAI試着サービス</p>
+            {% comment %} <p class="lead">
+                <a class="btn btn-primary btn-lg" href="{% url 'index' %}"
+                role="button">AI試着</a>
+            </p> {% endcomment %}
+        </div>
         <div class='row mt-5'>
             <div class="col-md-6">
                 <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">

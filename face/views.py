@@ -5,20 +5,19 @@ import cv2
 import numpy as np
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from PIL import Image, ImageDraw, ImageFilter
 
 from .forms import ImageForm
 from .models import UploadedImage
 
+# def home(request):
+#     params = {}
 
-def home(request):
-    params = {}
-
-    return render(request, "home.html", params)
+#     return render(request, "home.html", params)
 
 
-@login_required
 def index(request):
     params = {}
     params["form"] = ImageForm()
@@ -28,7 +27,6 @@ def index(request):
     return render(request, "index.html", params)
 
 
-@login_required
 def upload_image(request):
     if request.method == "POST":
         form = ImageForm(request.POST, request.FILES)
@@ -42,7 +40,10 @@ def upload_image(request):
             recognize_face(uploaded_image)
             uploaded_image.image = get_image_path(uploaded_image)
             uploaded_image.save()
-    return redirect("index")
+            path = str(settings.BASE_DIR) + "/media" + \
+                get_image_path(uploaded_image)
+            result_file = open(path, 'rb').read()
+    return HttpResponse(result_file, content_type="image/png")
 
 
 def get_image_path(before_im):
