@@ -5,14 +5,26 @@
         <br/>
         <div class="jumbotron">
             <h1 class="display-4">AeyeFitting</h1>
-            <p class="lead">買おうか迷っている服と、自分の写真を用意するだけ。お店に行かず、似合うかわかるAI試着サービス</p>
+            <p class="lead">買おうか迷っている服と、自分の写真を用意するだけ。</p>
+            <p class="lead">お店に行かず、似合うかわかるAI試着サービス</p>
             {% comment %} <p class="lead">
                 <a class="btn btn-primary btn-lg" href="{% url 'index' %}"
                 role="button">AI試着</a>
             </p> {% endcomment %}
         </div>
         <div class='row mt-5'>
-            <div class="col-md-6">
+            <div class="col-md-4 text-center">
+                <h3>サンプル</h3>
+                <img class='img-thumbnail' src="/media/images/user_im.jpg"width="30%"/>
+                <img class='img-thumbnail' src="/media/images/pro_im.jpg" width="50%"/>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3>試着写真</h3>
+                <img class='img-thumbnail' src="/media/images/sample_upload.png" width="80%"/>
+            </div>
+        </div>
+        <div class='row mt-5'>
+            <div class="col-md-8">
                 <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="input-group mb-3">
@@ -33,13 +45,16 @@
                             <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
                         </div>
                     </div>
+                    <p>※他の人の顔が写っていないものにしてください<br>
+                        肌色のものが写っている場合、正しく顔が認識されない可能性があります。<br>
+                    </p>
                     <div class="text-center">
-                        <button class="btn btn-primary btn-lg" type="submit">試着する</button>
+                        <button class="btn btn-primary btn-lg" type="submit">試着する(画像は保存されません)</button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="row my-4">
+        {% comment %} <div class="row my-4">
             <div class="col-md-6">
                 {% for im in uploaded_images %}
                     <div class="card mb-4 index">
@@ -47,7 +62,7 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>
+        </div> {% endcomment %}
     
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script>
