@@ -27,15 +27,18 @@ def upload_image(request):
         if form.is_valid():
             user_im = request.FILES.get("user_im")
             product_im = request.FILES.get("product_im")
-
             day, output = recognize_face(user_im, product_im)
+
             if not output:
                 messages.error(request, '画像の作成に失敗しました。')
                 return redirect('index')
 
             result_file = open(output, 'rb').read()
             delete_file(day)
-    return HttpResponse(result_file, content_type="image/png")
+            return HttpResponse(result_file, content_type="image/png")
+        else:
+            messages.error(request, '画像を選択してください')
+            return redirect('index')
 
 
 def get_tmp_image_path(dir, day):
@@ -54,9 +57,8 @@ def recognize_face(user_im, product_im):
     src = cv2.imdecode(np.fromstring(
         user_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
 
-    faces = face_cascade.detectMultiScale(src)
-
     try:
+        faces = face_cascade.detectMultiScale(src)
         face = sorted(faces, reverse=True, key=lambda x: x[2])[0]
     except:
         return None, None
@@ -86,9 +88,9 @@ def recognize_face(user_im, product_im):
     # 商品画像の顔を識別
     pro_src = cv2.imdecode(np.fromstring(
         product_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
-    pro_faces = face_cascade.detectMultiScale(pro_src)
 
     try:
+        pro_faces = face_cascade.detectMultiScale(pro_src)
         pro_face = sorted(pro_faces, reverse=True, key=lambda x: x[2])[0]
     except:
         return None, None
