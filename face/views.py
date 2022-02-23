@@ -6,6 +6,7 @@ from datetime import datetime
 import cv2
 import numpy as np
 from django.conf import settings
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from PIL import Image, ImageDraw, ImageFilter
@@ -29,6 +30,7 @@ def upload_image(request):
 
             day, output = recognize_face(user_im, product_im)
             if output == None:
+                messages.error(request, '画像の作成に失敗しました。')
                 return redirect('index')
 
             result_file = open(output, 'rb').read()
@@ -53,9 +55,11 @@ def recognize_face(user_im, product_im):
         user_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
 
     faces = face_cascade.detectMultiScale(src)
-    if not faces.any():
+
+    try:
+        face = sorted(faces, reverse=True, key=lambda x: x[2])[0]
+    except:
         return None, None
-    face = sorted(faces, reverse=True, key=lambda x: x[2])[0]
 
     x, y, w, h = face[0], face[1], face[2], face[3]
     sab = int(w*0.25)
@@ -84,9 +88,10 @@ def recognize_face(user_im, product_im):
         product_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
     pro_faces = face_cascade.detectMultiScale(pro_src)
 
-    if not pro_faces.any():
+    try:
+        pro_face = sorted(pro_faces, reverse=True, key=lambda x: x[2])[0]
+    except:
         return None, None
-    pro_face = sorted(pro_faces, reverse=True, key=lambda x: x[2])[0]
 
     px, py, pw, ph = pro_face[0], pro_face[1], pro_face[2], pro_face[3]
 
