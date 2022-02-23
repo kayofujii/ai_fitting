@@ -21,6 +21,11 @@ def index(request):
     return render(request, "index.html", params)
 
 
+def help(request):
+    params = {}
+    return render(request, "help.html", params)
+
+
 def upload_image(request):
     if request.method == "POST":
         form = ImageForm(request.POST, request.FILES)
