@@ -33,7 +33,8 @@
     </div>
     <div class='row mt-5'>
         <div class="col-sm-8">
-            <form method="post" action="{% url 'upload' %}"  target="_blank" enctype="multipart/form-data">
+            <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+            {% comment %} <form method="post" action="{% url 'upload' %}"  target="_blank" enctype="multipart/form-data"> {% endcomment %}
                 {% csrf_token %}
                 <div class="input-group mb-3">
                     {% comment %} <div class="input-group-prepend">
