@@ -29,7 +29,7 @@ def upload_image(request):
             product_im = request.FILES.get("product_im")
 
             day, output = recognize_face(user_im, product_im)
-            if output == None:
+            if not output:
                 messages.error(request, '画像の作成に失敗しました。')
                 return redirect('index')
 
