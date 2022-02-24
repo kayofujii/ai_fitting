@@ -1,4 +1,5 @@
 .jumbotron-extend {
+    height: 80vh;
     min-height: 300px;
     margin-bottom: 60px;
     background: url("images/clothes_top.jpeg") no-repeat center center;
