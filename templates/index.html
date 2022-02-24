@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}AeyeFitting{% endblock title %}
-
+{% load static %}
 {% block content %}
     <br/>
-    <div class="jumbotron">
+    <div class="jumbotron jumbotron-header">
         <h1 class="display-4">AeyeFitting</h1>
-        {% comment %} <p class="">買おうか迷っている服と、自分の写真を用意するだけ。</p> {% endcomment %}
-        <p class="">お店に行かず、似合うかわかる。AI試着サービス</p>
-        {% comment %} <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{% url 'index' %}"
-            role="button">AI試着</a>
-        </p> {% endcomment %}
+        <p class="message">お店に行かず、似合うかわかる。<br>合成技術を使ったAI試着サービス</p>
     </div>
     {% if messages %}
         <ul class="messages">
@@ -19,36 +14,32 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <p class='fs-2 fw-light text-center'>サンプル<small> ※フリー画像を使用しています。</small></p>
+    <p class='fs-2 fw-light'>正面に写った自分の写真と買いたい服をアップロードするとサンプルのような合成写真ができます。</p>
+    <p class='fs-2 fw-light'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <div class='row mt-5'>
         <div class="col-sm-4 text-center">
-            <img class='img-thumbnail' src="/media/images/user_im.jpg"width="30%"/>
-            <img class='img-thumbnail' src="/media/images/pro_im.jpg" width="50%"/>
+            <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
+            <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="50%"/>
             <figcaption class="figure-caption text-center">ユーザー画像(左) 商品画像(右)</figcaption>
         </div>
         <div class="col-sm-4 text-center">
-            <img class='img-thumbnail' src="/media/images/sample_upload.png" width="80%"/>
+            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="80%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
         </div>
     </div>
+    <hr class="my-4">
     <div class='row mt-5'>
         <div class="col-sm-8">
+            <p class='fs-2 fw-light text-center mb-5'>試着イメージ作成ページ</p>
             <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
-            {% comment %} <form method="post" action="{% url 'upload' %}"  target="_blank" enctype="multipart/form-data"> {% endcomment %}
                 {% csrf_token %}
                 <div class="input-group mb-3">
-                    {% comment %} <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">アップロード</span>
-                    </div> {% endcomment %}
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="user_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                         <label class="custom-file-label" for="inputGroupFile01">ユーザー画像を選択する</label>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    {% comment %} <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">アップロード</span>
-                    </div> {% endcomment %}
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="product_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                         <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
@@ -64,15 +55,6 @@
             </form>
         </div>
     </div>
-    {% comment %} <div class="row my-4">
-        <div class="col-sm-6">
-            {% for im in uploaded_images %}
-                <div class="card mb-4 index">
-                    <img class="img-thumbnail" src="{{ im.image.url }}" />
-                </div>
-            {% endfor %}
-        </div>
-    </div> {% endcomment %}
 
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script>

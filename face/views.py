@@ -17,13 +17,17 @@ from .forms import ImageForm
 def index(request):
     params = {}
     params["form"] = ImageForm()
-
     return render(request, "index.html", params)
 
 
 def help(request):
     params = {}
     return render(request, "help.html", params)
+
+
+def about(request):
+    params = {}
+    return render(request, "about.html", params)
 
 
 def upload_image(request):
