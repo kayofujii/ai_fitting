@@ -4,7 +4,7 @@
     margin-bottom: 60px;
     background: url("images/clothes_top.jpeg") no-repeat center center;
     background-size: cover;
-    background-color:rgba(255,255,255,0.3);
+    background-color:rgba(255,255,255,0.5);
     background-blend-mode:lighten;
 }
 .jumbotron-header {
