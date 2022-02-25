@@ -14,15 +14,15 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <p class='fs-2 fw-light'>正面に写った自分の写真と買いたい服をアップロードするとサンプルのような合成写真ができます。</p>
-    <p class='fs-2 fw-light'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
+    <p class='fs-2 fw-light text-center mb-5'>正面に写った自分の写真と買いたい服をアップロードするとサンプルのような合成写真ができます。</p>
+    <p class='fs-2 fw-light text-center mb-5'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <div class='row mt-5'>
-        <div class="col-sm-4 text-center">
+        {% comment %} <div class="col-sm-4 text-center">
             <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
             <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="50%"/>
             <figcaption class="figure-caption text-center">ユーザー画像(左) 商品画像(右)</figcaption>
-        </div>
-        <div class="col-sm-4 text-center">
+        </div> {% endcomment %}
+        <div class="col-sm-8 text-center">
             <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="80%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
         </div>
@@ -33,6 +33,15 @@
             <p class='fs-2 fw-light text-center mb-5'>試着イメージ作成ページ</p>
             <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
                 {% csrf_token %}
+                <div class="text-center">
+                    <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
+                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="50%"/>
+                    <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(左)の例</figcaption>
+                </div>
+                <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
+                    ※肌色のものが写っている場合、正しく顔が認識されない可能性があります。<br>
+                    ※プライバシーを考慮し、画像は表示処理後にデータベースから削除される仕組みとなっております。<br>
+                </small>
                 <div class="input-group mb-3">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="user_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
@@ -45,10 +54,6 @@
                         <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
                     </div>
                 </div>
-                <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
-                    ※肌色のものが写っている場合、正しく顔が認識されない可能性があります。<br>
-                    ※プライバシーを考慮し、画像は表示処理後にデータベースから削除される仕組みとなっております。<br>
-                </small>
                 <div class="text-center my-5">
                     <button class="btn btn-outline-info btn-lg" type="submit">試着する(画像は保存されません)</button>
                 </div>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}AeyeFitting{% endblock title %}
+{% load static %}
+{% block content %}
+    <br/>
+    <div class='row mt-5'>
+        <div class="col-sm-8">
+            <p class='fs-2 fw-light text-center mb-5'>試着イメージ作成ページ</p>
+            <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="user_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">ユーザー画像を選択する</label>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="product_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
+                    </div>
+                </div>
+                <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
+                    ※肌色のものが写っている場合、正しく顔が認識されない可能性があります。<br>
+                    ※プライバシーを考慮し、画像は表示処理後にデータベースから削除される仕組みとなっております。<br>
+                </small>
+                <div class="text-center my-5">
+                    <button class="btn btn-outline-info btn-lg" type="submit">試着する(画像は保存されません)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script>
+        bsCustomFileInput.init();
+    </script>
+{% endblock content %}

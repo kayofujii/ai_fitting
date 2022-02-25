@@ -20,6 +20,12 @@ def index(request):
     return render(request, "index.html", params)
 
 
+# def fitting(request):
+#     params = {}
+#     params["form"] = ImageForm()
+#     return render(request, "fitting.html", params)
+
+
 def help(request):
     params = {}
     return render(request, "help.html", params)
