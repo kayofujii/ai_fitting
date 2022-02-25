@@ -1,0 +1,30 @@
+.jumbotron-extend {
+    height: 100vh;
+    min-height: 350px;
+    margin-bottom: 60px;
+    background: url("images/clothes_top.57660c4cdc12.jpeg") no-repeat center center;
+    background-size: cover;
+    background-color:rgba(255,255,255,0.3);
+    background-blend-mode:lighten;
+}
+.jumbotron-header {
+    min-height: 300px;
+    margin-bottom: 60px;
+    background: url("images/clothes_header.0c5d34114aba.jpeg") no-repeat center center;
+    background-size: cover;
+    background-color:rgba(255,255,255,0.5);
+    background-blend-mode:lighten;
+}
+.jumbotron-container {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 400px;
+}
+.message {
+    position: absolute;
+}

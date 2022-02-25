@@ -1,0 +1,20 @@
+.jumbotron-extend {
+    min-height: 300px;
+    margin-bottom: 60px;
+    background: url("images/clothes_top.57660c4cdc12.jpeg") no-repeat center center;
+    background-size: cover;
+    background-color:rgba(255,255,255,0.3);
+    background-blend-mode:lighten;
+}
+.jumbotron-header {
+    min-height: 300px;
+    margin-bottom: 60px;
+    background: url("images/clothes_header.0c5d34114aba.jpeg") no-repeat center center;
+    background-size: cover;
+    background-color:rgba(255,255,255,0.5);
+    background-blend-mode:lighten;
+}
+
+.message {
+    position: absolute;
+}
