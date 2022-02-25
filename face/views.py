@@ -74,6 +74,9 @@ def recognize_face(user_im, product_im):
 
     try:
         faces = face_cascade.detectMultiScale(src)
+    except:
+        return None, None
+    try:
         face = sorted(faces, reverse=True, key=lambda x: x[2])[0]
     except:
         return None, None
@@ -106,6 +109,9 @@ def recognize_face(user_im, product_im):
 
     try:
         pro_faces = face_cascade.detectMultiScale(pro_src)
+    except:
+        return None, None
+    try:
         pro_face = sorted(pro_faces, reverse=True, key=lambda x: x[2])[0]
     except:
         return None, None
