@@ -90,7 +90,7 @@ def recognize_face_with_api(user_im, product_im):
     user_rect = u_face.face_rectangle
 
     x, y, w, h = user_rect.left, user_rect.top, user_rect.width, user_rect.height
-    sab = int(w*0.4)
+    sab = int(w*0.35)
 
     im_crop = img.crop((x-sab, y-sab, x+w+sab, y+h+sab))
     im_rgba = im_crop.copy()
