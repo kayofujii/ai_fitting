@@ -23,7 +23,7 @@
             <figcaption class="figure-caption text-center">ユーザー画像(左) 商品画像(右)</figcaption>
         </div> {% endcomment %}
         <div class="col-sm-8 text-center">
-            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="80%"/>
+            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="40%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
         </div>
     </div>
@@ -35,11 +35,10 @@
                 {% csrf_token %}
                 <div class="text-center">
                     <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
-                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="50%"/>
+                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="30%"/>
                     <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(左)の例</figcaption>
                 </div>
                 <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
-                    ※肌色のものが写っている場合、正しく顔が認識されない可能性があります。<br>
                     ※プライバシーを考慮し、画像は表示処理後にデータベースから削除される仕組みとなっております。<br>
                 </small>
                 <div class="input-group mb-3">

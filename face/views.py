@@ -1,24 +1,12 @@
-import asyncio
-import base64
-import glob
 import hashlib
-import io
 import os
 import os.path
 import shutil
-import sys
-import time
-import uuid
 from datetime import datetime
-from io import BytesIO
-from urllib.parse import urlparse
 
 import cv2
 import numpy as np
-import requests
 from azure.cognitiveservices.vision.face import FaceClient
-from azure.cognitiveservices.vision.face.models import (Person,
-                                                        TrainingStatusType)
 from django.conf import settings
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
@@ -91,7 +79,6 @@ def recognize_face_with_api(user_im, product_im):
     filename = fs.save(u_path, user_im)
 
     img = Image.open('media/' + filename)
-
     u_stream = open(
         'media/' + filename, "rb")
 
@@ -103,7 +90,7 @@ def recognize_face_with_api(user_im, product_im):
     user_rect = u_face.face_rectangle
 
     x, y, w, h = user_rect.left, user_rect.top, user_rect.width, user_rect.height
-    sab = int(w*0.5)
+    sab = int(w*0.4)
 
     im_crop = img.crop((x-sab, y-sab, x+w+sab, y+h+sab))
     im_rgba = im_crop.copy()
@@ -136,11 +123,11 @@ def recognize_face_with_api(user_im, product_im):
 
     pro_rect = p_face.face_rectangle
     px, py, pw, ph = pro_rect.left, pro_rect.top, pro_rect.width, pro_rect.height
-    p_sab = int(pw*0.5)
+    p_sab = int(pw*0.3)
 
     copy_pro_im = pro_img.copy()
     im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2), int(ph+p_sab*2)))
-    copy_pro_im.paste(im_rgba_crop, (int(px-p_sab), int(py-p_sab)),
+    copy_pro_im.paste(im_rgba_crop, (px-p_sab, py-p_sab),
                       im_rgba_crop.split()[3])
 
     copy_pro_im.save(str(settings.BASE_DIR) +
