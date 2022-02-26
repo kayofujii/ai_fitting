@@ -159,5 +159,7 @@ except ImportError:
 
 if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
+    KEY = os.environ['KEY']
+    ENDPOINT = os.environ['ENDPOINT']
     import django_heroku
     django_heroku.settings(locals())

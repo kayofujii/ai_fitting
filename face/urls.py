@@ -9,4 +9,3 @@ urlpatterns = [
     # path("fitting", views.fitting, name='fitting'),
     path("upload", views.upload_image, name="upload"),
 ]
-handler500 = views.my_customized_server_error
