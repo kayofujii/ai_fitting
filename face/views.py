@@ -58,39 +58,25 @@ def upload_image(request):
         if form.is_valid():
             user_im = request.FILES.get("user_im")
             product_im = request.FILES.get("product_im")
-            # now_date, output = recognize_face(user_im, product_im)
-            now_date, output = recognize_face_with_api(user_im, product_im)
+            hash_now_date, output = recognize_face_with_api(
+                user_im, product_im)
 
             if not output:
                 messages.error(request, '画像の作成に失敗しました。')
                 return redirect('index')
 
             result_file = open(output, 'rb').read()
-            delete_file(now_date)
+            delete_file(hash_now_date)
             return HttpResponse(result_file, content_type="image/png")
         else:
             messages.error(request, '画像を選択してください')
             return redirect('index')
 
 
-def get_tmp_image_path(dir, now_date):
+def get_tmp_image_path(dir, hash_now_date):
     os.makedirs(str(settings.BASE_DIR) +
-                f"/media/tmp/{dir}", exist_ok=True)
-    return f"/media/tmp/{dir}/%s%s" % (
-        hashlib.sha1(
-            (now_date).encode("utf-8")).hexdigest(),
-        ".png",
-    )
-
-
-# def getRectangle(faceDictionary):
-#     rect = faceDictionary.face_rectangle
-#     left = rect.left
-#     top = rect.top
-#     right = left + rect.width
-#     bottom = top + rect.height
-
-#     return ((left, top), (right, bottom))
+                f"/media/tmp/{dir}{hash_now_date}", exist_ok=True)
+    return f"/media/tmp/{dir}{hash_now_date}/%s%s" % (hash_now_date, ".png")
 
 
 def recognize_face_with_api(user_im, product_im):
@@ -98,13 +84,16 @@ def recognize_face_with_api(user_im, product_im):
     face_client = FaceClient(
         settings.ENDPOINT, CognitiveServicesCredentials(settings.KEY))
     now_date = str(datetime.now())
+    hash_now_date = hashlib.sha1((now_date).encode("utf-8")).hexdigest()
 
-    img = Image.open(
-        'media/tmp/user/4c01cd269a273b2823e0a75ddf053f923be25542.png')
-    draw = ImageDraw.Draw(img)
+    u_path = str(settings.BASE_DIR) + get_tmp_image_path('user', hash_now_date)
+    fs = FileSystemStorage()
+    filename = fs.save(u_path, user_im)
+
+    img = Image.open('media/' + filename)
 
     u_stream = open(
-        'media/tmp/user/4c01cd269a273b2823e0a75ddf053f923be25542.png', "rb")
+        'media/' + filename, "rb")
 
     u_detected_faces = face_client.face.detect_with_stream(
         image=u_stream, detection_model='detection_03')
@@ -114,85 +103,11 @@ def recognize_face_with_api(user_im, product_im):
     user_rect = u_face.face_rectangle
 
     x, y, w, h = user_rect.left, user_rect.top, user_rect.width, user_rect.height
-    sab = int(w*0.1)
+    sab = int(w*0.5)
 
     im_crop = img.crop((x-sab, y-sab, x+w+sab, y+h+sab))
-    im_crop.save('media/tmp/user/aaa.png')
     im_rgba = im_crop.copy()
 
-    # # opencv→pillow変換 https://qiita.com/derodero24/items/f22c22b22451609908ee
-    # im_rgba = cv2.cvtColor(im_rgba, cv2.COLOR_BGR2RGB)
-    # im_rgba = Image.fromarray(im_rgba)
-    # # 丸を作成
-    im_a = Image.new("L", im_rgba.size, 0)
-    draw = ImageDraw.Draw(im_a)
-    draw.ellipse((0, 0, im_rgba.size[0], im_rgba.size[0]), fill=255)
-    im_a = im_a.filter(ImageFilter.GaussianBlur(10))
-
-    # # 丸に顔をいれる
-    im_rgba.putalpha(im_a)
-    im_rgba_crop = im_rgba.crop(
-        (0, 0, im_rgba.size[0]+20, im_rgba.size[0]+20))
-    crop_path = str(settings.BASE_DIR) +\
-        get_tmp_image_path('crop', now_date)
-    im_rgba_crop.save(crop_path)
-
-    # # 商品画像の顔を識別
-    p_stream = open(
-        'media/tmp/user/pro.png', "rb")
-    pro_img = Image.open(
-        'media/tmp/user/pro.png')
-
-    p_detected_faces = face_client.face.detect_with_stream(
-        image=p_stream, detection_model='detection_03')
-    p_face = p_detected_faces[0]
-
-    pro_rect = p_face.face_rectangle
-
-    px, py, pw, ph = pro_rect.left, pro_rect.top, pro_rect.width, pro_rect.height
-    pim_crop = pro_img.crop((px-sab, py-sab, px+pw+sab, py+ph+sab))
-    pim_crop.save('media/tmp/user/bbb.png')
-    copy_pro_im = pro_img.copy()
-    im_rgba_crop = im_rgba_crop.resize((int(pw+sab*1.5), int(ph+sab*1.5)))
-    copy_pro_im.paste(im_rgba_crop, (px-sab, py-sab),
-                      im_rgba_crop.split()[3])
-    copy_pro_im.save(str(settings.BASE_DIR) +
-                     get_tmp_image_path('paste', now_date))
-
-    output = str(settings.BASE_DIR) + get_tmp_image_path('images', now_date)
-
-    output_im = copy_pro_im.copy()
-    output_im = np.array(output_im, dtype=np.uint8)
-    output_im = cv2.cvtColor(output_im, cv2.COLOR_RGB2BGR)
-
-    cv2.imwrite(output, output_im)
-    return now_date, output
-
-
-def recognize_face(user_im, product_im):
-    # open cv を使用したバージョン
-    now_date = str(datetime.now())
-    face_cascade = cv2.CascadeClassifier('opencv/face_cascade.xml')
-    src = cv2.imdecode(np.fromstring(
-        user_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
-
-    try:
-        faces = face_cascade.detectMultiScale(src)
-    except:
-        return None, None
-    try:
-        face = sorted(faces, reverse=True, key=lambda x: x[2])[0]
-    except:
-        return None, None
-
-    x, y, w, h = face[0], face[1], face[2], face[3]
-    sab = int(w*0.25)
-    face = src[y-sab:y+h+sab, x-sab:x+w+sab]
-    im_rgba = face.copy()
-
-    # opencv→pillow変換 https://qiita.com/derodero24/items/f22c22b22451609908ee
-    im_rgba = cv2.cvtColor(im_rgba, cv2.COLOR_BGR2RGB)
-    im_rgba = Image.fromarray(im_rgba)
     # 丸を作成
     im_a = Image.new("L", im_rgba.size, 0)
     draw = ImageDraw.Draw(im_a)
@@ -204,46 +119,48 @@ def recognize_face(user_im, product_im):
     im_rgba_crop = im_rgba.crop(
         (0, 0, im_rgba.size[0]+20, im_rgba.size[0]+20))
     crop_path = str(settings.BASE_DIR) +\
-        get_tmp_image_path('crop', now_date)
+        get_tmp_image_path('crop', hash_now_date)
     im_rgba_crop.save(crop_path)
 
+    p_path = str(settings.BASE_DIR) + get_tmp_image_path('pro', hash_now_date)
+    ps = FileSystemStorage()
+    pfilename = ps.save(p_path, product_im)
+
     # 商品画像の顔を識別
-    pro_src = cv2.imdecode(np.fromstring(
-        product_im.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+    pro_img = Image.open('media/' + pfilename)
+    p_stream = open('media/' + pfilename, "rb")
 
-    try:
-        pro_faces = face_cascade.detectMultiScale(pro_src)
-    except:
-        return None, None
-    try:
-        pro_face = sorted(pro_faces, reverse=True, key=lambda x: x[2])[0]
-    except:
-        return None, None
+    p_detected_faces = face_client.face.detect_with_stream(
+        image=p_stream, detection_model='detection_03')
+    p_face = p_detected_faces[0]
 
-    px, py, pw, ph = pro_face[0], pro_face[1], pro_face[2], pro_face[3]
+    pro_rect = p_face.face_rectangle
+    px, py, pw, ph = pro_rect.left, pro_rect.top, pro_rect.width, pro_rect.height
+    p_sab = int(pw*0.5)
 
-    pro_im = cv2.cvtColor(pro_src, cv2.COLOR_BGR2RGB)
-    pro_im = Image.fromarray(pro_im)
-
-    copy_pro_im = pro_im.copy()
-    im_rgba_crop = im_rgba_crop.resize((int(pw+sab*1.5), int(ph+sab*1.5)))
-    copy_pro_im.paste(im_rgba_crop, (px-sab, py-sab),
+    copy_pro_im = pro_img.copy()
+    im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2), int(ph+p_sab*2)))
+    copy_pro_im.paste(im_rgba_crop, (int(px-p_sab), int(py-p_sab)),
                       im_rgba_crop.split()[3])
-    copy_pro_im.save(str(settings.BASE_DIR) +
-                     get_tmp_image_path('paste', now_date))
 
-    output = str(settings.BASE_DIR) + get_tmp_image_path('images', now_date)
+    copy_pro_im.save(str(settings.BASE_DIR) +
+                     get_tmp_image_path('paste', hash_now_date))
+
+    output = str(settings.BASE_DIR) + \
+        get_tmp_image_path('images', hash_now_date)
 
     output_im = copy_pro_im.copy()
     output_im = np.array(output_im, dtype=np.uint8)
     output_im = cv2.cvtColor(output_im, cv2.COLOR_RGB2BGR)
 
     cv2.imwrite(output, output_im)
-    return now_date, output
+    return hash_now_date, output
 
 
-def delete_file(now_date):
-    print('a')
-    # shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/crop{now_date}/')
-    # shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/paste{now_date}/')
-    # shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/images{now_date}/')
+def delete_file(hash_now_date):
+    shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/user{hash_now_date}/')
+    shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/pro{hash_now_date}/')
+    shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/crop{hash_now_date}/')
+    shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/paste{hash_now_date}/')
+    shutil.rmtree(str(settings.BASE_DIR) +
+                  f'/media/tmp/images{hash_now_date}/')
