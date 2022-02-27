@@ -4,8 +4,6 @@ import os.path
 import shutil
 from datetime import datetime
 
-import cv2
-import numpy as np
 import pyheif
 from azure.cognitiveservices.vision.face import FaceClient
 from django.conf import settings
@@ -13,6 +11,7 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
 from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -56,10 +55,16 @@ def upload_image(request):
 
             result_file = open(output, 'rb').read()
             delete_file(hash_now_date)
-            return HttpResponse(result_file, content_type="image/png")
+            # return HttpResponse(result_file, content_type="image/png")
+            return display_image(result_file)
         else:
             messages.error(request, '画像を選択してください')
             return redirect('index')
+
+
+@csrf_exempt
+def display_image(result_file):
+    return HttpResponse(result_file, content_type="image/png")
 
 
 def get_tmp_image_path(dir, hash_now_date, im=None):
@@ -216,18 +221,9 @@ def recognize_face_with_api(user_im, product_im):
     im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2), int(ph+p_sab*2)))
     copy_pro_im.paste(im_rgba_crop, (px-p_sab, py-p_sab),
                       im_rgba_crop.split()[3])
-
-    copy_pro_im.save(str(settings.BASE_DIR) +
-                     get_tmp_image_path('paste', hash_now_date))
-
     output = str(settings.BASE_DIR) + \
         get_tmp_image_path('images', hash_now_date)
-
-    output_im = copy_pro_im.copy()
-    output_im = np.array(output_im, dtype=np.uint8)
-    output_im = cv2.cvtColor(output_im, cv2.COLOR_RGB2BGR)
-
-    cv2.imwrite(output, output_im)
+    copy_pro_im.save(output)
     return hash_now_date, output
 
 
@@ -235,6 +231,5 @@ def delete_file(hash_now_date):
     shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/user{hash_now_date}/')
     shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/pro{hash_now_date}/')
     shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/crop{hash_now_date}/')
-    shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/paste{hash_now_date}/')
     shutil.rmtree(str(settings.BASE_DIR) +
                   f'/media/tmp/images{hash_now_date}/')
