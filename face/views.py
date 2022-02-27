@@ -152,8 +152,10 @@ def recognize_face_with_api(user_im, product_im):
     # if os.path.splitext(filename)[1] == '.HEIC':
     #     filename = convert_heif_to_png(filename)
     img = Image.open('media/' + filename)
-    if img._getexif():
+    try:
         img = save_image_match_exif(img, filename)
+    except:
+        pass
 
     u_stream = open(
         'media/' + filename, "rb")
@@ -193,8 +195,10 @@ def recognize_face_with_api(user_im, product_im):
     # 商品画像の顔を識別
     pro_img = Image.open('media/' + pfilename)
 
-    if pro_img._getexif():
+    try:
         pro_img = save_image_match_exif(pro_img, filename)
+    except:
+        pass
 
     p_stream = open('media/' + pfilename, "rb")
 
