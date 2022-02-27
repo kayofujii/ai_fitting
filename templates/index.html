@@ -17,13 +17,8 @@
     <p class='fs-2 fw-light text-center mb-5'>正面に写った自分の写真と買いたい服をアップロードするとサンプルのような合成写真ができます。</p>
     <p class='fs-2 fw-light text-center mb-5'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <div class='row mt-5'>
-        {% comment %} <div class="col-sm-4 text-center">
-            <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
-            <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="50%"/>
-            <figcaption class="figure-caption text-center">ユーザー画像(左) 商品画像(右)</figcaption>
-        </div> {% endcomment %}
         <div class="col-sm-8 text-center">
-            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="40%"/>
+            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="70%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
         </div>
     </div>
@@ -35,7 +30,7 @@
                 {% csrf_token %}
                 <div class="text-center">
                     <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="20%"/>
-                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="20%"/>
+                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="40%"/>
                     <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(右)の例</figcaption>
                 </div>
                 <div class="m-4 text-center">

@@ -181,8 +181,10 @@ def recognize_face_with_api(user_im, product_im):
 
     # 丸に顔をいれる
     im_rgba.putalpha(im_a)
+
     im_rgba_crop = im_rgba.crop(
-        (0, 0, im_rgba.size[0]+20, im_rgba.size[0]+20))
+        (0, 0, im_rgba.size[0]+int(im_rgba.size[0]*0.25),
+         im_rgba.size[0]+int(im_rgba.size[0]*0.25)))
     crop_path = str(settings.BASE_DIR) +\
         get_tmp_image_path('crop', hash_now_date)
     im_rgba_crop.save(crop_path)
@@ -208,7 +210,7 @@ def recognize_face_with_api(user_im, product_im):
 
     pro_rect = p_face.face_rectangle
     px, py, pw, ph = pro_rect.left, pro_rect.top, pro_rect.width, pro_rect.height
-    p_sab = int(pw*0.3)
+    p_sab = int(pw*0.4)
 
     copy_pro_im = pro_img.copy()
     im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2), int(ph+p_sab*2)))
