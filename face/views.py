@@ -11,7 +11,6 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_exempt
 from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -55,16 +54,10 @@ def upload_image(request):
 
             result_file = open(output, 'rb').read()
             delete_file(hash_now_date)
-            # return HttpResponse(result_file, content_type="image/png")
-            return display_image(result_file)
+            return HttpResponse(result_file, content_type="image/png")
         else:
             messages.error(request, '画像を選択してください')
             return redirect('index')
-
-
-@csrf_exempt
-def display_image(result_file):
-    return HttpResponse(result_file, content_type="image/png")
 
 
 def get_tmp_image_path(dir, hash_now_date, im=None):
