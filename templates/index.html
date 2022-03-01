@@ -18,7 +18,7 @@
     <p class='fs-2 fw-light text-center mb-5'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <div class='row mt-5'>
         <div class="col-sm-8 text-center">
-            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="70%"/>
+            <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="60%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
         </div>
     </div>
@@ -29,8 +29,8 @@
             <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="text-center">
-                    <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="20%"/>
-                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="40%"/>
+                    <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
+                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="30%"/>
                     <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(右)の例</figcaption>
                 </div>
                 <div class="m-4 text-center">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="text-center my-5">
-                    <button class="btn btn-outline-info btn-lg" type="submit">試着する(画像は保存されません)</button>
+                    <button class="btn btn-outline-info btn-lg" type="submit">試着する<br><small>(画像は保存されません)</small></button>
                 </div>
             </form>
         </div>

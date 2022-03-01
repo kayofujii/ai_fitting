@@ -147,8 +147,6 @@ def recognize_face_with_api(user_im, product_im):
     fs = FileSystemStorage()
     filename = fs.save(u_path, user_im)
 
-    # if os.path.splitext(filename)[1] == '.HEIC':
-    #     filename = convert_heif_to_png(filename)
     img = Image.open('media/' + filename)
     try:
         img = save_image_match_exif(img, filename)
@@ -208,11 +206,11 @@ def recognize_face_with_api(user_im, product_im):
 
     pro_rect = p_face.face_rectangle
     px, py, pw, ph = pro_rect.left, pro_rect.top, pro_rect.width, pro_rect.height
-    p_sab = int(pw*0.4)
+    p_sab = int(pw*0.35)
 
     copy_pro_im = pro_img.copy()
-    im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2), int(ph+p_sab*2)))
-    copy_pro_im.paste(im_rgba_crop, (px-p_sab, py-p_sab),
+    im_rgba_crop = im_rgba_crop.resize((int(pw+p_sab*2.8), int(ph+p_sab*2.8)))
+    copy_pro_im.paste(im_rgba_crop, (px-p_sab, py-int(p_sab*1.5)),
                       im_rgba_crop.split()[3])
     output = str(settings.BASE_DIR) + \
         get_tmp_image_path('images', hash_now_date)

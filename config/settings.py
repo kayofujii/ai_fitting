@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'cloudinary_storage',
     # 3rd Party
     'crispy_forms',
 
@@ -147,7 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'index'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -161,5 +163,13 @@ if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
     KEY = os.environ['KEY']
     ENDPOINT = os.environ['ENDPOINT']
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': 'he93wwe4y',
+        'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+        'API_SECRET': os.environ['CLOUDINARY_API_SECRET']
+    }
     import django_heroku
     django_heroku.settings(locals())
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
