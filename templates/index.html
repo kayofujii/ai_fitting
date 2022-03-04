@@ -7,6 +7,12 @@
         <h1 class="display-4">AeyeFitting</h1>
         <p class="message">お店に行かず、似合うかわかる。<br>合成技術を使ったAI試着サービス</p>
     </div>
+    {% if image %}
+        <div class="col-sm-8 text-center">
+            <img class='img-thumbnail' src="{{ image.image.url }}" width="60%"/>
+            <figcaption class="figure-caption text-center">試着結果</figcaption>
+        </div>
+    {% endif %}
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -35,7 +41,7 @@
                 </div>
                 <div class="m-4 text-center">
                     <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
-                        ※プライバシーを考慮し、画像は表示処理後にデータベースから削除される仕組みとなっております。<br>
+                        ※プライバシーを考慮し、ログインしていな場合は画像は表示処理後一日以内にデータベースから削除される仕組みとなっております。<br>
                     </small>
                 </div>
                 <div class="input-group mb-3">
@@ -51,7 +57,7 @@
                     </div>
                 </div>
                 <div class="text-center my-5">
-                    <button class="btn btn-outline-info btn-lg" type="submit">試着する<br><small>(画像は保存されません)</small></button>
+                    <button class="btn btn-outline-info btn-lg" type="submit">試着する<br></button>
                 </div>
             </form>
         </div>

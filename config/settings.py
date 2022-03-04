@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     # 3rd Party
     'crispy_forms',
+    'django_cleanup',
 
     # Local
     'accounts',
@@ -163,6 +164,7 @@ if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
     KEY = os.environ['KEY']
     ENDPOINT = os.environ['ENDPOINT']
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': 'he93wwe4y',
         'API_KEY': os.environ['CLOUDINARY_API_KEY'],
@@ -170,6 +172,3 @@ if not DEBUG:
     }
     import django_heroku
     django_heroku.settings(locals())
-
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

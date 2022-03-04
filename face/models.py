@@ -20,7 +20,7 @@ class UploadedImage(models.Model):
         upload_to=get_image_path, null=True, blank=True)
     image = models.ImageField(upload_to=get_image_path, null=True, blank=True)
     author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
+        User, on_delete=models.CASCADE, null=True, blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    token = models.CharField(max_length=256, null=True, blank=True)
