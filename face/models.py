@@ -1,6 +1,7 @@
 import hashlib
 import os.path
 
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -14,11 +15,9 @@ def get_image_path(instance, filename):
 
 
 class UploadedImage(models.Model):
-    user_im = models.ImageField(
-        upload_to=get_image_path, null=True, blank=True)
-    product_im = models.ImageField(
-        upload_to=get_image_path, null=True, blank=True)
-    image = models.ImageField(upload_to=get_image_path, null=True, blank=True)
+    user_im = CloudinaryField('image', blank=True, null=True,)
+    product_im = CloudinaryField('image', blank=True, null=True,)
+    image = CloudinaryField('image', blank=True, null=True,)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
     )

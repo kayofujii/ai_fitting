@@ -9,13 +9,12 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
 import os
 from pathlib import Path
 
+import cloudinary
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -41,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    # 'cloudinary_storage',
     'cloudinary',
-    'cloudinary_storage',
     # 3rd Party
     'crispy_forms',
     'django_cleanup',
@@ -153,6 +152,7 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 try:
@@ -164,11 +164,15 @@ if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
     KEY = os.environ['KEY']
     ENDPOINT = os.environ['ENDPOINT']
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': 'he93wwe4y',
-        'API_KEY': os.environ['CLOUDINARY_API_KEY'],
-        'API_SECRET': os.environ['CLOUDINARY_API_SECRET']
-    }
     import django_heroku
     django_heroku.settings(locals())
+    # CLOUDINARY_STORAGE = {
+    #     'CLOUD_NAME': 'he93wwe4y',
+    #     'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+    #     'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
+    # }
+    cloudinary.config(
+        cloud_name='he93wwe4y',
+        api_key=os.environ['CLOUDINARY_API_KEY'],
+        api_secret=os.environ['CLOUDINARY_API_SECRET']
+    )

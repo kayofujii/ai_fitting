@@ -1,6 +1,14 @@
-from django import forms
+from cloudinary.forms import CloudinaryFileField
+from django.forms import ModelForm
+
+from .models import UploadedImage
 
 
-class ImageForm(forms.Form):
-    user_im = forms.ImageField(label="ユーザー画像")
-    product_im = forms.ImageField(label="商品画像")
+class ImageForm(ModelForm):
+    class Meta:
+        model = UploadedImage
+        fields = ('product_im', 'user_im')
+    product_im = CloudinaryFileField(
+        options={'folder': 'media/images', })
+    user_im = CloudinaryFileField(
+        options={'folder': 'media/images', })
