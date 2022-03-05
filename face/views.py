@@ -34,17 +34,23 @@ def index(request):
     return render(request, "index.html", params)
 
 
-def detail(request):
+def detail(request, token):
     params = {}
-
     try:
-        token = request.GET.get('token')
         image = UploadedImage.objects.get(
             token=token)
         params['image'] = image
     except:
         pass
     return render(request, "detail.html", params)
+
+
+def user_info(request):
+    params = {}
+    images = UploadedImage.objects.filter(
+        author=request.user).order_by('-created_at')
+    params['images'] = images
+    return render(request, "user_info.html", params)
 
 
 # def fitting(request):
@@ -88,10 +94,8 @@ def upload_image(request):
             uploaded_image.save()
 
             delete_file(hash_now_date)
-            redirect_url = reverse('detail')
-            parameters = urlencode({'token': hash_now_date})
-            url = f'{redirect_url}?{parameters}'
-            return redirect(url)
+            redirect_url = reverse('detail', args=[hash_now_date])
+            return redirect(redirect_url)
         else:
             messages.error(request, '画像を選択してください')
             return redirect('index')

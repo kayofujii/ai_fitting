@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}AeyeFitting{% endblock title %}
+{% block title %}画像詳細ページ{% endblock title %}
 {% load static %}
 {% block content %}
-    {% if image %}
     <div class='row mt-5'>
         <div class="col-sm-2"></div>
         <div class="col-sm-8 text-center">
-            <p class='fs-2 fw-light text-center mb-5'>試着結果</small></p>
-            <img class='img-thumbnail' src="{{ image.image.url }}" width="60%"/>
+        {% if image %}
+            <img class='img-thumbnail' src="{{ image.user_im.url }}" width="30%"/>
+            <img class='img-thumbnail' src="{{ image.product_im.url }}" width="30%"/>
+            <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(右)</figcaption>
+            <br>
+            <img class='img-thumbnail' src="{{ image.image.url }}" width="50%"/>
+            <figcaption class="figure-caption text-center">試着結果</figcaption>
+        {% else %}
+            画像は削除されました。
+        {% endif %}
         </div>
         <div class="col-sm-2"></div>
     </div>
-    {% else %}
-        <div class='row mt-5'>
-            画像は削除されました。
-        </div>
-    {% endif %}
+
     <div class="text-center my-5">
         <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">戻る</button>
     </div>

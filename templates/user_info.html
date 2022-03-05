@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}ユーザーページ{% endblock title %}
+{% load static %}
+{% block content %}
+    <div class="text-center my-5">
+        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">戻る</button>
+    </div>
+    <div class='row mt-5'>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 text-center">
+        {% if images %}
+            <hr>
+            {% for im in images %}
+                <p>作成日:{{ im.created_at }}</p>
+                <img class='img-thumbnail' src="{{ im.image.url }}" width="40%"/>
+                <figcaption class="figure-caption text-center">試着結果</figcaption>
+                <div class="text-center my-5">
+                    <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'detail' im.token %}'">詳細へ</button>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            画像はありません。
+        {% endif %}
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+{% endblock content %}
