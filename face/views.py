@@ -34,6 +34,19 @@ def index(request):
     return render(request, "index.html", params)
 
 
+def detail(request):
+    params = {}
+
+    try:
+        token = request.GET.get('token')
+        image = UploadedImage.objects.get(
+            token=token)
+        params['image'] = image
+    except:
+        pass
+    return render(request, "detail.html", params)
+
+
 # def fitting(request):
 #     params = {}
 #     params["form"] = ImageForm()
@@ -75,7 +88,7 @@ def upload_image(request):
             uploaded_image.save()
 
             delete_file(hash_now_date)
-            redirect_url = reverse('index')
+            redirect_url = reverse('detail')
             parameters = urlencode({'token': hash_now_date})
             url = f'{redirect_url}?{parameters}'
             return redirect(url)

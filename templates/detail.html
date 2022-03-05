@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}AeyeFitting{% endblock title %}
+{% load static %}
+{% block content %}
+    {% if image %}
+    <div class='row mt-5'>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 text-center">
+            <p class='fs-2 fw-light text-center mb-5'>試着結果</small></p>
+            <img class='img-thumbnail' src="{{ image.image.url }}" width="60%"/>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+    {% else %}
+        <div class='row mt-5'>
+            画像は削除されました。
+        </div>
+    {% endif %}
+    <div class="text-center my-5">
+        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">戻る</button>
+    </div>
+{% endblock content %}

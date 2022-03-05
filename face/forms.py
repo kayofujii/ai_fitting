@@ -1,4 +1,3 @@
-from cloudinary.forms import CloudinaryFileField
 from django import forms
 
 
