@@ -15,8 +15,6 @@ django-heroku = "*"
 dj-database-url = "*"
 azure-cognitiveservices-vision-face = "*"
 pyheif = "*"
-django-cloudinary-storage = "*"
-django-cleanup = "*"
 
 [dev-packages]
 autopep8 = "*"

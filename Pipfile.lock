@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bc02860420614fd73b3963a196f480de0a0d7906cffa8a4ae1ecb60433b74002"
+            "sha256": "e1557247b4047cc31bea06dfed64be74dea3926b88ae9812f708395838ff5fab"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -109,12 +109,6 @@
             "markers": "python_version >= '3'",
             "version": "==2.0.12"
         },
-        "cloudinary": {
-            "hashes": [
-                "sha256:f436ef3ddb2b3989199afaf82bc50655b187bf1ae98c4bf0bb3eb63055953466"
-            ],
-            "version": "==1.29.0"
-        },
         "dj-database-url": {
             "hashes": [
                 "sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163",
@@ -130,22 +124,6 @@
             ],
             "index": "pypi",
             "version": "==4.0.3"
-        },
-        "django-cleanup": {
-            "hashes": [
-                "sha256:922e06ef8839c92bd3ab37a84db6058b8764f3fe44dbb4487bbca941d288280a",
-                "sha256:997feab3b1f7a2e84f71c29e83b1d664459ec0d4b1924977b1fa25b5babb8703"
-            ],
-            "index": "pypi",
-            "version": "==6.0.0"
-        },
-        "django-cloudinary-storage": {
-            "hashes": [
-                "sha256:95c855c7334141b2a485ea7eb5716de87bb6ce0d848e205debb3a3ab7bbbd49a",
-                "sha256:debd403a5f225c9d35c4af508ff4abc7fdc262129464134b60b2feeb2c44d3e1"
-            ],
-            "index": "pypi",
-            "version": "==0.3.0"
         },
         "django-crispy-forms": {
             "hashes": [

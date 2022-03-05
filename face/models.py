@@ -17,7 +17,8 @@ def get_image_path(instance, filename):
 class UploadedImage(models.Model):
     user_im = CloudinaryField('image', blank=True, null=True,)
     product_im = CloudinaryField('image', blank=True, null=True,)
-    image = CloudinaryField('image', blank=True, null=True,)
+    image = CloudinaryField('image', blank=True, null=True,
+                            folder="media/face_images")
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
     )

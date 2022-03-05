@@ -40,11 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    # 'cloudinary_storage',
     'cloudinary',
     # 3rd Party
     'crispy_forms',
-    'django_cleanup',
 
     # Local
     'accounts',
@@ -152,7 +150,6 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 try:
@@ -166,11 +163,6 @@ if not DEBUG:
     ENDPOINT = os.environ['ENDPOINT']
     import django_heroku
     django_heroku.settings(locals())
-    # CLOUDINARY_STORAGE = {
-    #     'CLOUD_NAME': 'he93wwe4y',
-    #     'API_KEY': os.environ['CLOUDINARY_API_KEY'],
-    #     'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
-    # }
     cloudinary.config(
         cloud_name='he93wwe4y',
         api_key=os.environ['CLOUDINARY_API_KEY'],

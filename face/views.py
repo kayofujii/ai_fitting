@@ -64,13 +64,13 @@ def upload_image(request):
                 return redirect('index')
 
             uploaded_image = UploadedImage()
+            uploaded_image.user_im = user_im
+            uploaded_image.product_im = product_im
             uploaded_image.image = SimpleUploadedFile(name='temp.png', content=open(
                 output, 'rb').read(), content_type='image/png')
             uploaded_image.token = hash_now_date
 
             if request.user.is_authenticated:
-                uploaded_image.user_im = user_im
-                uploaded_image.product_im = product_im
                 uploaded_image.author = request.user
             uploaded_image.save()
 
@@ -91,23 +91,6 @@ def get_tmp_image_path(dir, hash_now_date, im=None):
     os.makedirs(str(settings.BASE_DIR) +
                 f"/media/tmp/{dir}{hash_now_date}", exist_ok=True)
     return f"/media/tmp/{dir}{hash_now_date}/%s%s" % (hash_now_date, extention)
-
-
-# def convert_heif_to_png(image_path):
-#     new_name = image_path.replace('HEIC', 'png')
-#     print('media/' + image_path)
-#     heif_file = pyheif.read('media/' + image_path)
-#     print(heif_file)
-#     data = Image.frombytes(
-#         heif_file.mode,
-#         heif_file.size,
-#         heif_file.data,
-#         "raw",
-#         heif_file.mode,
-#         heif_file.stride,
-#     )
-#     data.save('media/' + new_name, "PNG")
-#     return new_name
 
 
 def rotateImage(img, orientation):
