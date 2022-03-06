@@ -18,6 +18,7 @@ pyheif = "*"
 cloudinary = "*"
 social-auth-app-django = "*"
 stripe = "*"
+python-dateutil = "*"
 
 [dev-packages]
 autopep8 = "*"

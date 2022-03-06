@@ -24,3 +24,4 @@ class Order(models.Model):
     )
     stripe = models.CharField(verbose_name='Stripe Session', max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted_date = models.DateField(null=True, blank=True)

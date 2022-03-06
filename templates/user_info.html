@@ -14,6 +14,12 @@
                     <input type="hidden" name="priceId" value="price_1KaBHbLXC6TXiqu5QiULFErA" />
                     <button class="btn btn-outline-info btn-lg" type="submit">無制限試着プランに申し込む</button>
                 </form>
+                {% if order %}
+                <form action="{% url 'stop_subscription_session' %}" method="POST">
+                    <input type="hidden" name="subscriptionId" value="{{ subscription_id }}" />
+                    <button class="btn btn-outline-info btn-lg" type="submit">キャンセルする</button>
+                </form>
+                {% endif %}
                 <br><br>
             {% endif %}
         {% if images %}

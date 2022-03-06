@@ -2,13 +2,14 @@ import hashlib
 import os
 import os.path
 import shutil
-from datetime import datetime
+from datetime import date, datetime
 from urllib.parse import urlencode
 
 import cloudinary
 import pyheif
 import stripe
 from azure.cognitiveservices.vision.face import FaceClient
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
@@ -16,6 +17,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.timezone import make_aware
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from msrest.authentication import CognitiveServicesCredentials
@@ -82,13 +84,13 @@ def user_info(request):
         images = UploadedImage.objects.filter(
             author=request.user, is_deleted=False).order_by('-created_at')
     params['images'] = images
+    order = Order.objects.filter(user=request.user, deleted_date=None).first()
+    if order:
+        params['order'] = order
+        subscription_id = stripe.checkout.Session.retrieve(order.stripe)[
+            'subscription']
+        params['subscription_id'] = subscription_id
     return render(request, "user_info.html", params)
-
-
-# def fitting(request):
-#     params = {}
-#     params["form"] = ImageForm()
-#     return render(request, "fitting.html", params)
 
 
 def help(request):
@@ -301,15 +303,30 @@ def create_checkout_session(request):
             'customer_id': customer.id,
         }
     )
-    # order = Order.objects.create(
-    #     user=User.objects.get(id=session['metadata']['customer_id']),
-    #     stripe=session['id']
-    # )
     return redirect(session.url)
 
 
+@csrf_exempt
+@require_POST
+def stop_subscription_session(request):
+    customer = request.user
+    subscriptionId = request.POST.get('subscriptionId')
+    session = stripe.Subscription.modify(
+        subscriptionId,
+        cancel_at_period_end=True,
+        metadata={
+            'customer_id': customer.id,
+        }
+    )
+    return redirect('stop_success')
+
+
 def checkout_success(request):
-    return render(request, 'success.html')
+    return render(request, 'checkout_success.html')
+
+
+def stop_success(request):
+    return render(request, 'stop_success.html')
 
 
 @csrf_exempt
@@ -332,9 +349,12 @@ def checkout_success_webhook(request):
     # Handle the checkout.session.completed event
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-
         # Fulfill the purchase...
         fulfill_order(session)
+
+    if event['type'] == 'subscription_schedule.canceled':
+        session = event['data']['object']
+        cancel_order(session)
 
     # Passed signature verification
     return HttpResponse(status=200)
@@ -346,3 +366,20 @@ def fulfill_order(session):
         stripe=session['id']
     )
     print("Fulfilling order")
+
+
+def cancel_order(session):
+    order = Order.objects.filter(user=User.objects.get(
+        id=session['metadata']['customer_id']))
+    if session['status'] == 'canceled':
+        order.stripe = session['id']
+        today = make_aware(datetime.now())
+        ordered_at = order.created_at
+        if date(today.year, today.month, ordered_at.day) > date(today.year, today.month, today.day):
+            o_deleted_date = date(today.year, today.month, ordered_at.day)
+        else:
+            o_deleted_date = date(today.year, today.month,
+                                  ordered_at.day) + relativedelta(months=1)
+        print(o_deleted_date)
+        order.deleted_date = o_deleted_date
+        order.save()
