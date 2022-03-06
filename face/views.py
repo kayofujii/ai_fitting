@@ -301,8 +301,14 @@ def create_checkout_session(request):
         cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
         metadata={
             'customer_id': customer.id,
+            'flag': 'create'
         }
     )
+    # order = Order.objects.create(
+    #     user=User.objects.get(id=session['metadata']['customer_id']),
+    #     stripe=session['id']
+    # )
+    # print(order)
     return redirect(session.url)
 
 
@@ -314,15 +320,12 @@ def stop_subscription_session(request):
     session = stripe.Subscription.modify(
         subscriptionId,
         cancel_at_period_end=True,
-        success_url=request.scheme + '://' +
-        request.get_host() + reverse('cancel_scheduled'),
-        cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
         metadata={
             'customer_id': customer.id,
-            'cancel_flag': 'cancel_scheduled',
+            'flag': 'cancel_scheduled',
         }
     )
-    return redirect(session.url)
+    return redirect('stop_success')
 
 
 def checkout_success(request):
@@ -374,8 +377,8 @@ def fulfill_order(session):
 
 def cancel_order(session):
     order = Order.objects.filter(user=User.objects.get(
-        id=session['metadata']['customer_id']))
-    if session['metadata']['cancel_flag'] == 'cancel_scheduled':
+        id=session['metadata']['customer_id']), deleted_date=None).last()
+    if session['metadata']['flag'] == 'cancel_scheduled':
         order.stripe = session['id']
         today = make_aware(datetime.now())
         ordered_at = order.created_at
