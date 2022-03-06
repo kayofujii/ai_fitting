@@ -171,6 +171,9 @@ if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY']
     KEY = os.environ['KEY']
     ENDPOINT = os.environ['ENDPOINT']
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY']
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']
+    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
     import django_heroku
     django_heroku.settings(locals())
     cloudinary.config(
@@ -178,6 +181,3 @@ if not DEBUG:
         api_key=os.environ['CLOUDINARY_API_KEY'],
         api_secret=os.environ['CLOUDINARY_API_SECRET']
     )
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY']
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']
-    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
