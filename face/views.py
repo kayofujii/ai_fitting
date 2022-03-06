@@ -316,6 +316,7 @@ def stop_subscription_session(request):
         cancel_at_period_end=True,
         metadata={
             'customer_id': customer.id,
+            'cancel_flag': 'cancel_scheduled',
         }
     )
     return redirect('stop_success')
@@ -352,7 +353,7 @@ def checkout_success_webhook(request):
         # Fulfill the purchase...
         fulfill_order(session)
 
-    if event['type'] == 'subscription_schedule.canceled':
+    if event['type'] == 'customer.subscription.updated':
         session = event['data']['object']
         cancel_order(session)
 
@@ -371,7 +372,7 @@ def fulfill_order(session):
 def cancel_order(session):
     order = Order.objects.filter(user=User.objects.get(
         id=session['metadata']['customer_id']))
-    if session['status'] == 'canceled':
+    if session['metadata']['cancel_flag'] == 'cancel_scheduled':
         order.stripe = session['id']
         today = make_aware(datetime.now())
         ordered_at = order.created_at
@@ -380,6 +381,5 @@ def cancel_order(session):
         else:
             o_deleted_date = date(today.year, today.month,
                                   ordered_at.day) + relativedelta(months=1)
-        print(o_deleted_date)
         order.deleted_date = o_deleted_date
         order.save()
