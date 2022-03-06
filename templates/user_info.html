@@ -6,21 +6,34 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8 text-center">
             <h2 class='text-center mb-5'>マイページ</h2>
-            <div class="text-center my-5">
-                <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
-            </div>
             {% if request.user.is_staff %}
-                <form action="{% url 'create_checkout_session' %}" method="POST">
-                    <input type="hidden" name="priceId" value="price_1KaBHbLXC6TXiqu5QiULFErA" />
-                    <button class="btn btn-outline-info btn-lg" type="submit">無制限試着プランに申し込む</button>
-                </form>
                 {% if order %}
-                <form action="{% url 'stop_subscription_session' %}" method="POST">
-                    <input type="hidden" name="subscriptionId" value="{{ subscription_id }}" />
-                    <button class="btn btn-outline-info btn-lg" type="submit">キャンセルする</button>
-                </form>
+                    <div class="text-center my-5">
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                    </div>
+                    <form action="{% url 'stop_subscription_session' %}" method="POST">
+                        <input type="hidden" name="subscriptionId" value="{{ subscription_id }}" />
+                        <button class="btn btn-outline-info btn-lg" type="submit">定期利用をキャンセルする</button>
+                    </form>
+                {% elif many_images %}
+                    <div class="text-center my-5">
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'" disabled>試着する</button>
+                        <br><small>一ヶ月間で10回以上画像を作成できません。これ以上作成する際は、下の定期プランにお申し込み下さい。</small>
+                    </div>
+                    <form action="{% url 'create_checkout_session' %}" method="POST">
+                        <input type="hidden" name="priceId" value="price_1KaBHbLXC6TXiqu5QiULFErA" />
+                        <button class="btn btn-outline-info btn-lg" type="submit">無制限試着プランに申し込む</button>
+                    </form>
+                {% else %}
+                    <div class="text-center my-5">
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                    </div>
                 {% endif %}
                 <br><br>
+            {% else %}
+                <div class="text-center my-5">
+                    <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                </div>
             {% endif %}
         {% if images %}
             <hr>

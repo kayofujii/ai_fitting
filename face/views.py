@@ -90,6 +90,13 @@ def user_info(request):
         subscription_id = stripe.checkout.Session.retrieve(order.stripe)[
             'subscription']
         params['subscription_id'] = subscription_id
+    today = make_aware(datetime.now())
+    end_date = date(today.year, today.month, today.day)
+    start_date = end_date - relativedelta(months=1)
+    image_count = UploadedImage.objects.filter(
+        author=request.user, created_at__range=(start_date, end_date)).count()
+    if image_count > 10:
+        params['many_images'] = True
     return render(request, "user_info.html", params)
 
 
@@ -377,7 +384,7 @@ def fulfill_order(session):
 
 def cancel_order(session):
     order = Order.objects.filter(user=User.objects.get(
-        id=session['metadata']['customer_id']), deleted_date=None).last()
+        id=session['metadata']['customer_id']), deleted_date=None).first()
     if session['metadata']['flag'] == 'cancel_scheduled':
         order.stripe = session['id']
         today = make_aware(datetime.now())
