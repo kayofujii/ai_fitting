@@ -313,7 +313,6 @@ def checkout_success(request):
 
 
 @csrf_exempt
-@require_POST
 def checkout_success_webhook(request):
     payload = request.body
     sig_header = request.headers.get('stripe-signature')
