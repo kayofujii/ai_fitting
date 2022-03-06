@@ -338,8 +338,8 @@ def checkout_success_webhook(request):
 
 
 def fulfill_order(session):
-    order = Order.objects.create(
-        user=User.objects.get(id=session['metadata']['customer_id']),
-        stripe=session['id']
-    )
+    # order = Order.objects.create(
+    #     user=User.objects.get(id=session['metadata']['customer_id']),
+    #     stripe=session['id']
+    # )
     print("Fulfilling order")
