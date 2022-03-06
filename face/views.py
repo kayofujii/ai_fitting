@@ -314,12 +314,15 @@ def stop_subscription_session(request):
     session = stripe.Subscription.modify(
         subscriptionId,
         cancel_at_period_end=True,
+        success_url=request.scheme + '://' +
+        request.get_host() + reverse('cancel_scheduled'),
+        cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
         metadata={
             'customer_id': customer.id,
             'cancel_flag': 'cancel_scheduled',
         }
     )
-    return redirect('stop_success')
+    return redirect(session.url)
 
 
 def checkout_success(request):
