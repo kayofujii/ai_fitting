@@ -301,6 +301,10 @@ def create_checkout_session(request):
             'customer_id': customer.id,
         }
     )
+    # order = Order.objects.create(
+    #     user=User.objects.get(id=session['metadata']['customer_id']),
+    #     stripe=session['id']
+    # )
     return redirect(session.url)
 
 
@@ -312,7 +316,7 @@ def checkout_success(request):
 @require_POST
 def checkout_success_webhook(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.headers.get('stripe-signature')
     event = None
 
     try:
@@ -338,8 +342,8 @@ def checkout_success_webhook(request):
 
 
 def fulfill_order(session):
-    # order = Order.objects.create(
-    #     user=User.objects.get(id=session['metadata']['customer_id']),
-    #     stripe=session['id']
-    # )
+    order = Order.objects.create(
+        user=User.objects.get(id=session['metadata']['customer_id']),
+        stripe=session['id']
+    )
     print("Fulfilling order")
