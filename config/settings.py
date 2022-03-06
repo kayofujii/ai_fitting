@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cloudinary',
     # 3rd Party
     'crispy_forms',
+    'social_django',
 
     # Local
     'accounts',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -73,6 +75,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -116,6 +120,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -146,8 +155,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'user_info'
 LOGOUT_REDIRECT_URL = 'index'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'user_info'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -168,3 +178,5 @@ if not DEBUG:
         api_key=os.environ['CLOUDINARY_API_KEY'],
         api_secret=os.environ['CLOUDINARY_API_SECRET']
     )
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY']
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']

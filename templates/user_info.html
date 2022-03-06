@@ -2,13 +2,14 @@
 {% block title %}ユーザーページ{% endblock title %}
 {% load static %}
 {% block content %}
-    <div class="text-center my-5">
-        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
-        <br><br>
-    </div>
     <div class='row mt-5'>
         <div class="col-sm-2"></div>
         <div class="col-sm-8 text-center">
+            <h2 class='text-center mb-5'>マイページ</h2>
+            <div class="text-center my-5">
+                <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                <br><br>
+            </div>
         {% if images %}
             <hr>
             {% for im in images %}

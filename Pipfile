@@ -16,6 +16,7 @@ dj-database-url = "*"
 azure-cognitiveservices-vision-face = "*"
 pyheif = "*"
 cloudinary = "*"
+social-auth-app-django = "*"
 
 [dev-packages]
 autopep8 = "*"
