@@ -5,6 +5,7 @@ import shutil
 from datetime import datetime
 from urllib.parse import urlencode
 
+import cloudinary
 import pyheif
 from azure.cognitiveservices.vision.face import FaceClient
 from django.conf import settings
@@ -45,10 +46,34 @@ def detail(request, token):
     return render(request, "detail.html", params)
 
 
+def logical_delete_image(request, im_id):
+    image = UploadedImage.objects.get(
+        pk=im_id)
+    image.is_deleted = True
+    image.save()
+    messages.success(request, '削除しました')
+    return redirect('user_info')
+
+
+def physical_delete_image(request, im_id):
+    image = UploadedImage.objects.get(
+        pk=im_id)
+    cloudinary.uploader.destroy(image.user_im.public_id)
+    cloudinary.uploader.destroy(image.product_im.public_id)
+    cloudinary.uploader.destroy(image.image.public_id)
+    image.delete()
+    messages.success(request, '物理削除しました')
+    return redirect('user_info')
+
+
 def user_info(request):
     params = {}
-    images = UploadedImage.objects.filter(
-        author=request.user).order_by('-created_at')
+    if request.user.is_staff:
+        images = UploadedImage.objects.filter(
+            author=request.user).order_by('-created_at')
+    else:
+        images = UploadedImage.objects.filter(
+            author=request.user, is_deleted=False).order_by('-created_at')
     params['images'] = images
     return render(request, "user_info.html", params)
 

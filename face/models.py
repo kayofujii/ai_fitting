@@ -15,3 +15,4 @@ class UploadedImage(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     token = models.CharField(max_length=256, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)

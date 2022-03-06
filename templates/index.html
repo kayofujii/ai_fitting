@@ -27,13 +27,6 @@
     <div class='row mt-5'>
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
             <p class='fs-2 fw-light text-center mb-5'>試着イメージ作成ページ</p>
             <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
                 {% csrf_token %}

@@ -12,6 +12,12 @@
             <br>
             <img class='img-thumbnail' src="{{ image.image.url }}" width="50%"/>
             <figcaption class="figure-caption text-center">試着結果</figcaption>
+            <div class="text-center my-5">
+                <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'logical_delete_image' image.id %}'">削除する</button>
+                {% if request.user.is_staff %}
+                    <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'physical_delete_image' image.id %}'">削除する(物理)</button>
+                {% endif %}
+            </div>
         {% else %}
             画像は削除されました。
         {% endif %}
