@@ -17,6 +17,7 @@ azure-cognitiveservices-vision-face = "*"
 pyheif = "*"
 cloudinary = "*"
 social-auth-app-django = "*"
+stripe = "*"
 
 [dev-packages]
 autopep8 = "*"

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # 3rd Party
     'crispy_forms',
     'social_django',
+    'stripe',
 
     # Local
     'accounts',
@@ -176,6 +177,7 @@ if not DEBUG:
     SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
     STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
     STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
+    ENDPOINT_SECRET = os.environ['ENDPOINT_SECRET']
     import django_heroku
     django_heroku.settings(locals())
     cloudinary.config(

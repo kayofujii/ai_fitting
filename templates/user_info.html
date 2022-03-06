@@ -8,8 +8,14 @@
             <h2 class='text-center mb-5'>マイページ</h2>
             <div class="text-center my-5">
                 <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
-                <br><br>
             </div>
+            {% if request.user.is_staff %}
+                <form action="{% url 'create_checkout_session' %}" method="POST">
+                    <input type="hidden" name="priceId" value="price_1KaBHbLXC6TXiqu5QiULFErA" />
+                    <button class="btn btn-outline-info btn-lg" type="submit">無制限試着プランに申し込む</button>
+                </form>
+                <br><br>
+            {% endif %}
         {% if images %}
             <hr>
             {% for im in images %}

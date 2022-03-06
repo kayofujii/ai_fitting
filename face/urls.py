@@ -14,4 +14,9 @@ urlpatterns = [
     path("about", views.about, name="about"),
     # path("fitting", views.fitting, name='fitting'),
     path("upload", views.upload_image, name="upload"),
+    path('create_checkout_session', views.create_checkout_session,
+         name='create_checkout_session'),
+    path('checkout/success', views.checkout_success, name='checkout_success'),
+    path('webhook', views.checkout_success_webhook,
+         name='checkout_success_webhook'),
 ]

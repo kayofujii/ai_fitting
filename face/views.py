@@ -7,18 +7,25 @@ from urllib.parse import urlencode
 
 import cloudinary
 import pyheif
+import stripe
 from azure.cognitiveservices.vision.face import FaceClient
 from django.conf import settings
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image, ImageDraw, ImageFilter
 
 from .forms import ImageForm
-from .models import UploadedImage
+from .models import Order, UploadedImage, User
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+endpoint_secret = settings.ENDPOINT_SECRET
 
 
 def index(request):
@@ -273,3 +280,66 @@ def delete_file(hash_now_date):
     shutil.rmtree(str(settings.BASE_DIR) + f'/media/tmp/crop{hash_now_date}/')
     shutil.rmtree(str(settings.BASE_DIR) +
                   f'/media/tmp/images{hash_now_date}/')
+
+
+@csrf_exempt
+@require_POST
+def create_checkout_session(request):
+    customer = request.user
+    price_id = request.POST.get('priceId')
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price': price_id,
+            'quantity': 1,
+        }],
+        mode='subscription',
+        success_url=request.scheme + '://' +
+        request.get_host() + reverse('checkout_success'),
+        cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
+        metadata={
+            'customer_id': customer.id,
+        }
+    )
+    return redirect(session.url)
+
+
+def checkout_success(request):
+    return render(request, 'success.html')
+
+
+@csrf_exempt
+@require_POST
+def checkout_success_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fulfill the purchase...
+        fulfill_order(session)
+
+    # Passed signature verification
+    return HttpResponse(status=200)
+
+
+def fulfill_order(session):
+    order = Order.object.create(
+        user=User.objects.get(id=session['metadata']['customer_id']),
+        stripe=session['id']
+    )
+    print("Fulfilling order")
