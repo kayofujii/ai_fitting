@@ -45,7 +45,7 @@ def fitting(request):
     start_date = end_date - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
         author=request.user, created_at__range=(start_date, end_date)).count()
-    if not (order and image_count > 10):
+    if not order and image_count > 10:
         return redirect('user_info')
     params = {}
     params["form"] = ImageForm()
@@ -104,7 +104,7 @@ def user_info(request):
     start_date = end_date - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
         author=request.user, created_at__range=(start_date, end_date)).count()
-    if image_count > 1:
+    if image_count > 10:
         params['many_images'] = True
     return render(request, "user_info.html", params)
 
