@@ -2,7 +2,6 @@
 {% block title %}AeyeFitting{% endblock title %}
 {% load static %}
 {% block content %}
-    {% if not user.is_authenticated %}
     <br/>
     <div class="jumbotron jumbotron-header">
         <h1 class="display-4">AeyeFitting</h1>
@@ -21,43 +20,6 @@
         </div>
         <div class="col-sm-2"></div>
     </div>
-    {% else %}
-    <div class='row mt-5'>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <h2 class='text-center mb-5'>試着イメージ作成ページ</h2>
-            <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="text-center">
-                    <img class='img-thumbnail' src="{% static 'images/user_im.jpg' %}" width="30%"/>
-                    <img class='img-thumbnail' src="{% static 'images/pro_im.jpg' %}" width="30%"/>
-                    <figcaption class="figure-caption text-center">ユーザー画像(左)と商品画像(右)の例</figcaption>
-                </div>
-                <div class="m-4 text-center">
-                    <small>※他の人の顔が写っていない、正面に近い顔のものにしてください<br>
-                        ※プライバシーを考慮し、ログインしていな場合は画像は表示処理後一日以内にデータベースから削除される仕組みとなっております。<br>
-                    </small>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="user_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">ユーザー画像を選択する</label>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="product_im" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">商品画像を選択する</label>
-                    </div>
-                </div>
-                <div class="text-center my-5">
-                    <button class="btn btn-outline-info btn-lg" type="submit">試着する<br></button>
-                </div>
-            </form>
-        </div>
-        <div class="col-sm-2"></div>
-    </div>
-    {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script>

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("fitting", views.fitting, name="fitting"),
     path("detail/<str:token>", views.detail, name="detail"),
     path("logical_delete_image/<int:im_id>", views.logical_delete_image,
          name="logical_delete_image"),

@@ -40,10 +40,10 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'about' %}">AeyeFittingとは</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'index' %}">試着画像作成ページ</a>
-                </li>
                 {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'fitting' %}">試着画像作成ページ</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'user_info' %}">マイページ</a>
                     </li>

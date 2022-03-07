@@ -12,8 +12,10 @@ from azure.cognitiveservices.vision.face import FaceClient
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -31,17 +33,23 @@ endpoint_secret = settings.ENDPOINT_SECRET
 
 
 def index(request):
+    return render(request, "index.html")
+
+
+@login_required
+def fitting(request):
+    today = make_aware(datetime.now())
+    order = Order.objects.filter(Q(deleted_date__lte=today) | Q(
+        deleted_date=None), user=request.user).first()
+    end_date = date(today.year, today.month, today.day)
+    start_date = end_date - relativedelta(months=1)
+    image_count = UploadedImage.objects.filter(
+        author=request.user, created_at__range=(start_date, end_date)).count()
+    if not (order and image_count > 10):
+        return redirect('user_info')
     params = {}
     params["form"] = ImageForm()
-
-    try:
-        token = request.GET.get('token')
-        image = UploadedImage.objects.get(
-            token=token)
-        params['image'] = image
-    except:
-        pass
-    return render(request, "index.html", params)
+    return render(request, "fitting.html", params)
 
 
 def detail(request, token):
@@ -84,18 +92,19 @@ def user_info(request):
         images = UploadedImage.objects.filter(
             author=request.user, is_deleted=False).order_by('-created_at')
     params['images'] = images
-    order = Order.objects.filter(user=request.user, deleted_date=None).first()
+    today = make_aware(datetime.now())
+    order = Order.objects.filter(Q(deleted_date__lte=today) | Q(
+        deleted_date=None), user=request.user).first()
     if order:
         params['order'] = order
         subscription_id = stripe.checkout.Session.retrieve(order.stripe)[
             'subscription']
         params['subscription_id'] = subscription_id
-    today = make_aware(datetime.now())
     end_date = date(today.year, today.month, today.day)
     start_date = end_date - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
         author=request.user, created_at__range=(start_date, end_date)).count()
-    if image_count > 10:
+    if image_count > 1:
         params['many_images'] = True
     return render(request, "user_info.html", params)
 
@@ -308,14 +317,9 @@ def create_checkout_session(request):
         cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
         metadata={
             'customer_id': customer.id,
-            'flag': 'create'
+            'meta_flag': 'create'
         }
     )
-    # order = Order.objects.create(
-    #     user=User.objects.get(id=session['metadata']['customer_id']),
-    #     stripe=session['id']
-    # )
-    # print(order)
     return redirect(session.url)
 
 
@@ -329,7 +333,7 @@ def stop_subscription_session(request):
         cancel_at_period_end=True,
         metadata={
             'customer_id': customer.id,
-            'flag': 'cancel_scheduled',
+            'meta_flag': 'cancel_scheduled',
         }
     )
     return redirect('stop_success')
@@ -383,9 +387,9 @@ def fulfill_order(session):
 
 
 def cancel_order(session):
-    order = Order.objects.filter(user=User.objects.get(
-        id=session['metadata']['customer_id']), deleted_date=None).first()
-    if session['metadata']['flag'] == 'cancel_scheduled':
+    if session['metadata']['meta_flag'] == '':
+        order = Order.objects.filter(user=User.objects.get(
+            id=session['metadata']['customer_id']), deleted_date=None).first()
         order.stripe = session['id']
         today = make_aware(datetime.now())
         ordered_at = order.created_at

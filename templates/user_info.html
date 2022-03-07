@@ -9,7 +9,7 @@
             {% if request.user.is_staff %}
                 {% if order %}
                     <div class="text-center my-5">
-                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'">試着する</button>
                     </div>
                     <form action="{% url 'stop_subscription_session' %}" method="POST">
                         <input type="hidden" name="subscriptionId" value="{{ subscription_id }}" />
@@ -17,7 +17,7 @@
                     </form>
                 {% elif many_images %}
                     <div class="text-center my-5">
-                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'" disabled>試着する</button>
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'" disabled>試着する</button>
                         <br><small>一ヶ月間で10回以上画像を作成できません。これ以上作成する際は、下の定期プランにお申し込み下さい。</small>
                     </div>
                     <form action="{% url 'create_checkout_session' %}" method="POST">
@@ -26,13 +26,13 @@
                     </form>
                 {% else %}
                     <div class="text-center my-5">
-                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'">試着する</button>
                     </div>
                 {% endif %}
                 <br><br>
             {% else %}
                 <div class="text-center my-5">
-                    <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'index' %}'">試着する</button>
+                    <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'">試着する</button>
                 </div>
             {% endif %}
         {% if images %}
