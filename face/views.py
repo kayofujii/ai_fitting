@@ -97,7 +97,7 @@ def user_info(request):
         Q(deleted_date=None), user=request.user).first()
     deleted_order = Order.objects.filter(deleted_date__gte=today).last()
     params['deleted_order'] = deleted_order
-    print(deleted_order)
+
     if order:
         params['order'] = order
         subscription_id = stripe.checkout.Session.retrieve(order.stripe)[
@@ -381,6 +381,7 @@ def checkout_success_webhook(request):
 
 
 def fulfill_order(session):
+    print(session['metadata'])
     order = Order.objects.create(
         user=User.objects.get(id=session['metadata']['customer_id']),
         stripe=session['id']
@@ -389,7 +390,8 @@ def fulfill_order(session):
 
 
 def cancel_order(session):
-    if session['metadata']['meta_flag'] == 'cancel_scheduled':
+    print(session['metadata'])
+    if session['metadata'] and session['metadata']['meta_flag'] == 'cancel_scheduled':
         order = Order.objects.filter(user=User.objects.get(
             id=session['metadata']['customer_id']), deleted_date=None).first()
         order.stripe = session['id']
