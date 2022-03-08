@@ -162,7 +162,6 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'user_info'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-
 try:
     from .local_settings import *
 except ImportError:
@@ -178,6 +177,7 @@ if not DEBUG:
     STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
     STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
     ENDPOINT_SECRET = os.environ['ENDPOINT_SECRET']
+    SECURE_SSL_REDIRECT = os.environ['SECURE_SSL_REDIRECT']
     import django_heroku
     django_heroku.settings(locals())
     cloudinary.config(
