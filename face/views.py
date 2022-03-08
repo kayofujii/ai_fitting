@@ -93,17 +93,19 @@ def user_info(request):
             author=request.user, is_deleted=False).order_by('-created_at')
     params['images'] = images
     today = make_aware(datetime.now())
-    order = Order.objects.filter(Q(deleted_date__lte=today) | Q(
-        deleted_date=None), user=request.user).first()
+    order = Order.objects.filter(
+        Q(deleted_date=None), user=request.user).first()
+    deleted_order = Order.objects.filter(deleted_date__gte=today).last()
+    params['deleted_order'] = deleted_order
+    print(deleted_order)
     if order:
         params['order'] = order
         subscription_id = stripe.checkout.Session.retrieve(order.stripe)[
             'subscription']
         params['subscription_id'] = subscription_id
-    end_date = date(today.year, today.month, today.day)
-    start_date = end_date - relativedelta(months=1)
+    start_datetime = today - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
-        author=request.user, created_at__range=(start_date, end_date)).count()
+        author=request.user, created_at__range=(start_datetime, today)).count()
     if image_count > 10:
         params['many_images'] = True
     return render(request, "user_info.html", params)
@@ -317,7 +319,7 @@ def create_checkout_session(request):
         cancel_url=request.scheme + '://' + request.get_host() + reverse('user_info'),
         metadata={
             'customer_id': customer.id,
-            'meta_flag': 'create'
+            'meta_flag': 'create',
         }
     )
     return redirect(session.url)
@@ -387,7 +389,7 @@ def fulfill_order(session):
 
 
 def cancel_order(session):
-    if session['metadata']['meta_flag'] == '':
+    if session['metadata']['meta_flag'] == 'cancel_scheduled':
         order = Order.objects.filter(user=User.objects.get(
             id=session['metadata']['customer_id']), deleted_date=None).first()
         order.stripe = session['id']

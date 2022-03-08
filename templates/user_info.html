@@ -15,6 +15,11 @@
                         <input type="hidden" name="subscriptionId" value="{{ subscription_id }}" />
                         <button class="btn btn-outline-info btn-lg" type="submit">定期利用をキャンセルする</button>
                     </form>
+                {% elif deleted_order %}
+                    <div class="text-center my-5">
+                        <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'">試着する</button>
+                    </div>
+                    <small>定期利用がキャンセルされています。定期利用の期限が切れるのは{{ deleted_order.deleted_date }}です。</small>
                 {% elif many_images %}
                     <div class="text-center my-5">
                         <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'" disabled>試着する</button>

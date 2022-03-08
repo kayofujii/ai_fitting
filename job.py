@@ -18,7 +18,7 @@ def delete_anonymous_uploaded_image():
     one_month_ago = make_aware(
         datetime.now()) - relativedelta(months=1)
     images = UploadedImage.objects.filter(
-        is_deleted=True, created_at__lte=one_month_ago.date())
+        is_deleted=True, created_at__lte=one_month_ago)
     for im in images:
         cloudinary.uploader.destroy(im.user_im.public_id)
         cloudinary.uploader.destroy(im.product_im.public_id)
