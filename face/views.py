@@ -45,7 +45,8 @@ def fitting(request):
     start_date = end_date - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
         author=request.user, created_at__range=(start_date, end_date)).count()
-    if not order and image_count > 10:
+    deleted_order = Order.objects.filter(deleted_date__gte=today).last()
+    if not (order or deleted_order) and image_count > 10:
         return redirect('user_info')
     params = {}
     params["form"] = ImageForm()
