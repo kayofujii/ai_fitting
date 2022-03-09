@@ -27,7 +27,8 @@
                     </div>
                     <form action="{% url 'create_checkout_session' %}" method="POST">
                         {% comment %} <input type="hidden" name="priceId" value="price_1KaBHbLXC6TXiqu5QiULFErA" /> {% endcomment %}
-                        <input type="hidden" name="priceId" value="price_1KaBUcLXC6TXiqu56Ct0fFIN" />
+                        {% comment %} <input type="hidden" name="priceId" value="price_1KaBUcLXC6TXiqu56Ct0fFIN" /> {% endcomment %}
+                        <input type="hidden" name="priceId" value="price_1KbNmmLXC6TXiqu5vtvXf3T8" />
                         <button class="btn btn-outline-info btn-lg" type="submit">無制限試着プランに申し込む</button>
                     </form>
                 {% else %}
