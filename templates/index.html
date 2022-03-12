@@ -7,15 +7,17 @@
         <h1 class="display-4">AeyeFitting</h1>
         <p class="message">お店に行かず、たった10秒で、似合うかわかる。<br>合成技術を使ったAI試着サービス</p>
     </div>
+    <p class='fs-2 fw-light text-center'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <p class='fs-2 fw-light text-center mb-5'>正面に写った自分の写真と買いたい服をアップロードするとサンプルのような合成写真ができます。</p>
-    <p class='fs-2 fw-light text-center mb-5'>試着サンプル<small> ※フリー画像を使用しています。</small></p>
     <div class='row mt-5'>
         <div class="col-sm-2"></div>
         <div class="col-sm-8 text-center">
             <img class='img-thumbnail' src="{% static 'images/sample_upload.png' %}" width="60%"/>
             <figcaption class="figure-caption text-center">試着画像</figcaption>
             <br>
-            {% if not user.is_authenticated %}
+            {% if user.is_authenticated %}
+                <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'fitting' %}'">試着する</button>
+            {% else %}
                 <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'signup' %}'">新規登録をして試してみる</button>
                 <button class="btn btn-outline-info btn-lg" type="button" onclick="location.href='{% url 'login' %}'">ログイン</button>
             {% endif %}

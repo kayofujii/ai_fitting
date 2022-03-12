@@ -84,6 +84,7 @@ def physical_delete_image(request, im_id):
     return redirect('user_info')
 
 
+@login_required
 def user_info(request):
     params = {}
     if request.user.is_staff:
