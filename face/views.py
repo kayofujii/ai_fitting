@@ -41,10 +41,9 @@ def fitting(request):
     today = make_aware(datetime.now())
     order = Order.objects.filter(Q(deleted_date__lte=today) | Q(
         deleted_date=None), user=request.user).first()
-    end_date = date(today.year, today.month, today.day)
-    start_date = end_date - relativedelta(months=1)
+    start_datetime = today - relativedelta(months=1)
     image_count = UploadedImage.objects.filter(
-        author=request.user, created_at__range=(start_date, end_date)).count()
+        author=request.user, created_at__range=(start_datetime, today)).count()
     deleted_order = Order.objects.filter(deleted_date__gte=today).last()
     if not (order or deleted_order) and image_count > 10:
         return redirect('user_info')
